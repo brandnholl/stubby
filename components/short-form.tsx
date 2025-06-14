@@ -87,19 +87,18 @@ export function ShortenForm() {
           <p className="font-mono text-sm">Error: {error}</p>
         </div>
       )}
-
       {shortUrl && (
         <div className="space-y-4 p-4 border border-black rounded bg-gray-50">
           <p className="text-gray-700 text-sm font-medium">
             Your shortened URL:
           </p>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <p className="border-black rounded-md text-black font-mono w-full">
               {shortUrl}
             </p>
             <button
               onClick={copyToClipboard}
-              className="bg-black text-white rounded-md w-36 hover:bg-gray-800 font-mono font-bold px-6"
+              className="bg-black text-white rounded-md sm:w-36 hover:bg-gray-800 font-mono font-bold px-6"
             >
               {isCopied ? "Copied!" : "Copy"}
             </button>
