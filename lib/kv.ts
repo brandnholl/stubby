@@ -22,9 +22,10 @@ function isValidUrl(string: string): boolean {
 }
 
 function getBaseUrl(): string {
-  return process.env.NODE_ENV === "development"
+  const url = process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
     : "https://stbby.link";
+  return url.endsWith('/') ? url.slice(0, -1) : url;
 }
 
 export async function shortenUrl(originalUrl: string) {
@@ -32,8 +33,10 @@ export async function shortenUrl(originalUrl: string) {
     return { success: false, error: "Please enter a valid URL" };
   }
 
+  const normalizedUrl = originalUrl.endsWith('/') ? originalUrl.slice(0, -1) : originalUrl;
+  
   const kv = getCloudflareContext().env.kv;
-  const hash = sha256(originalUrl);
+  const hash = sha256(normalizedUrl);
   const existingShortCode = await kv.get(`hash:${hash}`);
 
   const baseUrl = getBaseUrl();
@@ -50,7 +53,7 @@ export async function shortenUrl(originalUrl: string) {
     shortCode = generateShortCode();
   }
 
-  await kv.put(`short:${shortCode}`, originalUrl);
+  await kv.put(`short:${shortCode}`, normalizedUrl);
   await kv.put(`hash:${hash}`, shortCode);
 
   return {
