@@ -8,6 +8,7 @@ export function ShortenForm() {
   const [shortUrl, setShortUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +19,6 @@ export function ShortenForm() {
     setShortUrl("");
 
     try {
-      // CALLING THE SERVER ACTION DIRECTLY
       const result = await shortenUrl(url);
 
       if (result.success) {
@@ -37,6 +37,8 @@ export function ShortenForm() {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(shortUrl);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 5000);
     } catch {
       // fallback copy
       const textarea = document.createElement("textarea");
@@ -45,6 +47,8 @@ export function ShortenForm() {
       textarea.select();
       document.execCommand("copy");
       document.body.removeChild(textarea);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 5000);
     }
   };
 
@@ -52,7 +56,10 @@ export function ShortenForm() {
     <div className="space-y-6">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="url" className="block text-sm mb-2 text-gray-700 font-medium">
+          <label
+            htmlFor="url"
+            className="block text-sm mb-2 text-gray-700 font-medium"
+          >
             Enter URL:
           </label>
           <input
@@ -61,7 +68,7 @@ export function ShortenForm() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://example.com/very/long/url/here"
-            className="bg-white border-black text-black placeholder:text-gray-400 font-mono focus:border-gray-600 focus:ring-gray-600"
+            className="bg-white rounded-md border-black text-black placeholder:text-gray-400 font-mono focus:border-gray-600 focus:ring-gray-600 w-full"
             required
           />
         </div>
@@ -69,7 +76,7 @@ export function ShortenForm() {
         <button
           type="submit"
           disabled={isLoading || !url.trim()}
-          className="w-full bg-black text-white hover:bg-gray-800 font-mono font-bold disabled:opacity-50"
+          className="w-full bg-black text-white hover:bg-gray-800 font-mono font-bold rounded-md disabled:opacity-50"
         >
           {isLoading ? "Processing..." : "Shorten"}
         </button>
@@ -83,18 +90,18 @@ export function ShortenForm() {
 
       {shortUrl && (
         <div className="space-y-4 p-4 border border-black rounded bg-gray-50">
-          <p className="text-gray-700 text-sm font-medium">Your shortened URL:</p>
+          <p className="text-gray-700 text-sm font-medium">
+            Your shortened URL:
+          </p>
           <div className="flex gap-2">
-            <input
-              value={shortUrl}
-              readOnly
-              className="bg-white border-black text-black font-mono focus:border-gray-600 focus:ring-gray-600"
-            />
+            <p className="border-black rounded-md text-black font-mono w-full">
+              {shortUrl}
+            </p>
             <button
               onClick={copyToClipboard}
-              className="bg-black text-white hover:bg-gray-800 font-mono font-bold px-6"
+              className="bg-black text-white rounded-md w-36 hover:bg-gray-800 font-mono font-bold px-6"
             >
-              Copy
+              {isCopied ? "Copied!" : "Copy"}
             </button>
           </div>
         </div>

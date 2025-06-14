@@ -6,7 +6,11 @@ interface Params {
   shortCode: string;
 }
 
-export default async function RedirectPage({ params }: { params: Promise<Params> }) {
+export default async function RedirectPage({
+  params,
+}: {
+  params: Promise<Params>;
+}) {
   const { shortCode } = await params;
   const originalUrl = await getOriginalUrl(shortCode);
 
