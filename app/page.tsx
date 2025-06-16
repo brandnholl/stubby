@@ -14,7 +14,7 @@ export default function Home() {
         </div>
 
         <div className="text-center text-sm text-gray-500">
-          <p>paste your long url above and get a short one back. no strings attached.</p>
+          <p>paste your long url above and get a permanent short one back. no strings attached.</p>
         </div>
       </div>
     </div>
